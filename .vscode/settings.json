@@ -31,5 +31,12 @@
     "npm-debug.log.*": true,
     "test/**/__snapshots__": true,
     "yarn.lock": true
-  }
+  },
+  "sqltools.connections": [
+    {
+      "database": ".\\vm.sqlite",
+      "dialect": "SQLite",
+      "name": "vm"
+    }
+  ]
 }
