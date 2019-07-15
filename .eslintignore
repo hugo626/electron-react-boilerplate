@@ -33,6 +33,7 @@ node_modules
 # flow-typed
 flow-typed/npm/*
 !flow-typed/npm/module_vx.x.x.js
+flow-typed/module_vx.x.x.js
 
 # App packaged
 release
@@ -46,6 +47,8 @@ dist
 dll
 main.js
 main.js.map
+migrations/*
+seeds/*
 
 .idea
 npm-debug.log.*

@@ -13,11 +13,7 @@
 import { app, BrowserWindow} from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
-import path from "path";
 import MenuBuilder from './menu';
-
-let knex = require("./db");
-
 
 export default class AppUpdater {
   constructor() {

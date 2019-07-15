@@ -1,7 +1,8 @@
 const isDev = require('electron-is-dev');
-const config = require('../../knexfile');
+const config = require('./config');
 
-const env = isDev ? 'dev' : 'production';
+const env = isDev ? 'development' : 'production';
+/* eslint-disable */
 const knex = require('knex')(config[env]);
 
 module.exports = knex;

@@ -13,3 +13,9 @@ export type GetState = () => counterStateType;
 export type Dispatch = ReduxDispatch<Action>;
 
 export type Store = ReduxStore<GetState, Action>;
+
+export type todoType = {
+  +id: number,
+  +tasks: string,
+  +urgent: number
+};

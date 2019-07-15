@@ -6,7 +6,7 @@ module.exports = {
   development: {
     client: 'sqlite3',
     connection: {
-        filename: path.join(__dirname, 'vm.sqlite')
+        filename: path.join(path.normalize(path.join(__dirname,"/..")), 'vm.sqlite')
     },
     useNullAsDefault: true
   },
