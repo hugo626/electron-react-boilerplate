@@ -14,8 +14,8 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
-import { READ_DIR } from "./constants/ipcMessageName";
-import { readFiles } from "./file/fileReader";
+import READ_DIR from "./constants/ipcMessageName";
+import readFiles from "./file/fileReader";
 
 export default class AppUpdater {
   constructor() {
@@ -96,10 +96,8 @@ app.on('ready', async () => {
   });
 
   ipcMain.on(READ_DIR,(event,arg) => {
-    console.log("Signal received "+arg+" ");
-    const result = readFiles(arg, (result)=>{
-      console.log(result);
-      event.returnValue = result;
+    readFiles(arg, (files) => {
+      event.returnValue = files;
     });
   })
 

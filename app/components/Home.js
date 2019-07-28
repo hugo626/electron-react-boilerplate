@@ -1,23 +1,25 @@
 // @flow
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Input } from 'antd';
-const path = require("path");
+import { Button } from 'antd';
 import routes from '../constants/routes';
 import styles from './Home.css';
 
+const path = require("path");
+
+
 type Props = {
-  readDirRequest: (string) => void,
+  readDirRequest: (string) => void
 };
 
 type State = {
   selectedPath: string
-}
+};
 
 export default class Home extends Component<Props,State> {
   props: Props;
 
-  state : State = {
+  state: State = {
     selectedPath : path.resolve(__dirname)
   }
 
@@ -27,9 +29,8 @@ export default class Home extends Component<Props,State> {
   }
 
   selectFolder = (event)=>{
-    var theFiles = event.target.files;
-    var path = theFiles[0].path;
-    this.setState({selectedPath:path});
+    const theFiles = event.target.files;
+    this.setState({selectedPath:theFiles[0].path});
 }
 
   render() {

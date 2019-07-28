@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import { Layout, Menu, Icon } from 'antd';
 
 import routes from './constants/routes';
-import App from './containers/App';
 import HomePage from './containers/HomePage';
 import CounterPage from './containers/CounterPage';
 
@@ -21,22 +20,6 @@ class Routes extends Component {
 
   onCollapse = collapsed => {
     this.setState({ collapsed });
-  };
-
-  onClickMenu = ({ item, key, keyPath, domEvent, dispatch }) => {
-    switch (key) {
-      case '1':
-        console.log('Option 1'+history);
-        break;
-      case '2':
-        console.log('Option 2');
-        break;
-      case '3':
-        console.log('Option 3');
-        break;
-      default:
-        break;
-    }
   };
 
   render() {
@@ -62,7 +45,7 @@ class Routes extends Component {
                   <span>to Counter</span>
                 </NavLink>
               </Menu.Item>
-              <Menu.Item key="3" onClick={this.onClickMenu}>
+              <Menu.Item key="3" >
                 <NavLink to={routes.COUNTER}>
                   <Icon type="file" theme="twoTone" twoToneColor="#eb2f96"/>
                   <span>File</span>
