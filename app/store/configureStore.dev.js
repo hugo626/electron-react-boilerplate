@@ -7,7 +7,7 @@ import createSagaMiddleware from 'redux-saga';
 import createRootReducer from '../reducers';
 import * as counterActions from '../actions/counter';
 import type { counterStateType } from '../reducers/types';
-import loadTodos from '../db/sagas';
+import rootSaga from '../saga/root';
 
 const history = createHashHistory();
 
@@ -70,7 +70,7 @@ const configureStore = (initialState?: counterStateType) => {
     );
   }
 
-  sagaMiddleware.run(loadTodos);
+  sagaMiddleware.run(rootSaga);
 
   return store;
 };

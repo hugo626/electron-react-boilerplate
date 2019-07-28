@@ -63,8 +63,10 @@ class Routes extends Component {
                 </NavLink>
               </Menu.Item>
               <Menu.Item key="3" onClick={this.onClickMenu}>
-                <Icon type="file" />
-                <span>File</span>
+                <NavLink to={routes.COUNTER}>
+                  <Icon type="file" theme="twoTone" twoToneColor="#eb2f96"/>
+                  <span>File</span>
+                </NavLink>
               </Menu.Item>
             </Menu>
           </Sider>

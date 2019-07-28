@@ -1,19 +1,46 @@
 // @flow
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { Button, Input } from 'antd';
+const path = require("path");
 import routes from '../constants/routes';
 import styles from './Home.css';
 
-type Props = {};
+type Props = {
+  readDirRequest: (string) => void,
+};
 
-export default class Home extends Component<Props> {
+type State = {
+  selectedPath: string
+}
+
+export default class Home extends Component<Props,State> {
   props: Props;
+
+  state : State = {
+    selectedPath : path.resolve(__dirname)
+  }
+
+  onClick = ()=>{
+    const { readDirRequest } = this.props;
+    readDirRequest(this.state.selectedPath);
+  }
+
+  selectFolder = (event)=>{
+    var theFiles = event.target.files;
+    var path = theFiles[0].path;
+    this.setState({selectedPath:path});
+}
 
   render() {
     return (
       <div className={styles.container} data-tid="container">
         <h2>Home</h2>
         <Link to={routes.COUNTER}>to Counter</Link>
+        <input type="file" id="FileUpload" onChange={this.selectFolder} webkitdirectory="true" directory="true" />
+        <Button type="primary" onClick={this.onClick}>
+          Primary
+        </Button>
       </div>
     );
   }

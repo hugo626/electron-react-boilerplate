@@ -6,7 +6,7 @@ import { createHashHistory } from 'history';
 import { routerMiddleware } from 'connected-react-router';
 import createRootReducer from '../reducers';
 import type { counterStateType } from '../reducers/types';
-import loadTodos from '../db/sagas';
+import rootSaga from '../saga/root';
 
 // create the saga middleware
 const sagaMiddleware = createSagaMiddleware()
@@ -17,7 +17,7 @@ const enhancer = applyMiddleware(thunk, sagaMiddleware, router);
 
 function configureStore(initialState?: counterStateType) {
   const store = createStore(rootReducer, initialState, enhancer);
-  sagaMiddleware.run(loadTodos);
+  sagaMiddleware.run(rootSaga);
   return store;
 }
 

@@ -1,7 +1,7 @@
 // @flow
 import { call, put, takeLatest } from 'redux-saga/effects'
-import { TODOS_FETCH_REQUESTED, TODOS_FETCH_SUCCEEDED, TODOS_FETCH_FAILED } from "./actions";
-import dbApi from "./api";
+import { TODOS_FETCH_REQUESTED, TODOS_FETCH_SUCCEEDED, TODOS_FETCH_FAILED } from "../db/actions";
+import dbApi from "../db/api";
 
 // worker Saga: will be fired on USER_FETCH_REQUESTED actions
 function* fetchTodos() {
