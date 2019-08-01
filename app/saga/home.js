@@ -1,13 +1,14 @@
 // @flow
+import { ipcRenderer } from "electron";
 import { call, put, takeLatest } from 'redux-saga/effects'
 import { READ_DIR_REQUEST, READ_DIR_SUCCEEDED, READ_DIR_FAILED, readDirIpc} from "../actions/home";
+import { REPLY_READ_DIR } from "../constants/ipcMessageName";
 
 // worker Saga: will be fired on USER_FETCH_REQUESTED actions
 function* readDir(action) {
   try {
-     const listVideoFiles = yield call(readDirIpc, action.path);
-     console.log(listVideoFiles);
-     yield put({type: READ_DIR_SUCCEEDED, files:listVideoFiles});
+    const fileList = yield call(readDirIpc, action.path);
+     yield put({type: READ_DIR_SUCCEEDED, files:fileList});
   } catch (e) {
      yield put({type: READ_DIR_FAILED, message: e.message});
   }

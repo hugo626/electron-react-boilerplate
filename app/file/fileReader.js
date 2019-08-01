@@ -1,15 +1,40 @@
 const fs = require('fs');
 const path = require('path');
+const { promisify } = require('util');
+const fileExtNames = require('./fileConstants');
 
-const readFiles = (filePath, callBack, fileExtNames = [".js", ".html",".mp4",".avi"])=> {
-  const dirPath = path.resolve(filePath); // path to your directory goes here
-  fs.readdir(dirPath, (err, files) => {
-    const filesList = files.filter((event) => (
-      fileExtNames.includes(path.extname(event).toLowerCase()))).map((file)=>(
-      path.join(filePath,file)
-    ));
-    callBack(filesList);
+// promise化异步读取方法
+const readdir_promise  = promisify(fs.readdir);
+const fsstat_promise  = promisify(fs.stat);
+
+const readFilesAsync = (dir) => {
+  return readdir_promise(dir, { encoding: 'utf8' })
+    .then(filenames => {
+      const files = getFiles(dir, filenames);
+      return Promise.all(files);
+    })
+    .catch(err => console.error(err));
+}
+
+const getFiles = (dir, filenames)=>{
+  return filenames.map(filename => {
+    const { name, ext }= path.parse(filename);
+    const filePath = path.resolve(dir, filename);
+
+    return stat({ name, ext, filePath });
   });
 }
 
-export default readFiles;
+const stat = ({ name, ext, filePath }) => {
+  return fsstat_promise(filePath)
+    .then(stat => {
+      if (stat.isDirectory()) {
+        return readFilesAsync(filePath);
+      }
+      const {atime, mtime, birthtime, size} = stat;
+      return { name, ext, filePath,atime, mtime, birthtime, size};
+    })
+    .catch(err => console.error(err));
+}
+
+export { readFilesAsync };

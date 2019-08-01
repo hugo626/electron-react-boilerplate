@@ -1,6 +1,6 @@
 // @flow
 import { ipcRenderer } from "electron";
-import READ_DIR from "../constants/ipcMessageName";
+import {REQUEST_READ_DIR} from "../constants/ipcMessageName";
 
 const READ_DIR_REQUEST = 'READ_DIR_REQUEST';
 const READ_DIR_SUCCEEDED = 'READ_DIR_SUCCEEDED';
@@ -11,7 +11,7 @@ const readDirRequest = (path: string = ".") =>({
   path
 })
 
-const readDirIpc = (path: string = ".") =>(ipcRenderer.sendSync(READ_DIR, path))
+const readDirIpc = (path: string = ".") =>(ipcRenderer.sendSync(REQUEST_READ_DIR, path))
 
 
 export {READ_DIR_REQUEST, READ_DIR_SUCCEEDED, READ_DIR_FAILED, readDirRequest, readDirIpc};
