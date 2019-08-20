@@ -14,8 +14,7 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
-import {REQUEST_READ_DIR,REPLY_READ_DIR} from "./constants/ipcMessageName";
-import {readFiles, getFilesPath, readFilesAsync} from "./file/fileReader";
+import {REQUEST_READ_DIR,RECEIVED_READ_DIR} from "./constants/ipcMessageName";
 
 export default class AppUpdater {
   constructor() {
@@ -26,7 +25,7 @@ export default class AppUpdater {
 }
 
 let mainWindow = null;
-
+let workerWindow = null;
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
   sourceMapSupport.install();
@@ -75,8 +74,15 @@ app.on('ready', async () => {
     height: 728
   });
 
-  mainWindow.loadURL(`file://${__dirname}/app.html`);
+  workerWindow = new BrowserWindow({
+    show: false,
+    width: 1024,
+    height: 728
+  });
 
+
+  mainWindow.loadURL(`file://${__dirname}/app.html`);
+  workerWindow.loadURL(`file://${__dirname}/worker.html`);
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
   mainWindow.webContents.on('did-finish-load', () => {
@@ -93,13 +99,28 @@ app.on('ready', async () => {
 
   mainWindow.on('closed', () => {
     mainWindow = null;
+    workerWindow.close();
   });
 
   ipcMain.on(REQUEST_READ_DIR,(event,arg) => {
-    readFilesAsync(arg).then( files=>{
-      event.returnValue = files
-    });
+    workerWindow.webContents.send(REQUEST_READ_DIR,arg);
+    // readFilesAsync(arg).then( files=>{
+    //   event.returnValue = files
+    // });
   })
+
+  ipcMain.on(RECEIVED_READ_DIR, (event,arg)=>{
+    console.log(`received Worker's result ${event} ${arg}`)
+    ipcMain.send(RECEIVED_READ_DIR,arg);
+  })
+
+  workerWindow.webContents.on(REQUEST_READ_DIR,(event,arg) => {
+    console.log("worker received the task: "+arg)
+  })
+
+  mainWindow.on('closed', () => {
+    mainWindow = null;
+  });
 
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();

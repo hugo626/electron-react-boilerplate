@@ -9,7 +9,7 @@ const path = require("path");
 
 
 type Props = {
-  readDirRequest: (string) => void
+  sendReadDirRequest: (string) => void
 };
 
 type State = {
@@ -24,8 +24,8 @@ export default class Home extends Component<Props,State> {
   }
 
   onClick = ()=>{
-    const { readDirRequest } = this.props;
-    readDirRequest(this.state.selectedPath);
+    const { sendReadDirRequest } = this.props;
+    sendReadDirRequest(this.state.selectedPath);
   }
 
   selectFolder = (event)=>{

@@ -7,10 +7,9 @@ import { REPLY_READ_DIR } from "../constants/ipcMessageName";
 // worker Saga: will be fired on USER_FETCH_REQUESTED actions
 function* readDir(action) {
   try {
-    const fileList = yield call(readDirIpc, action.path);
-     yield put({type: READ_DIR_SUCCEEDED, files:fileList});
+    yield call(readDirIpc, action.path);
   } catch (e) {
-     yield put({type: READ_DIR_FAILED, message: e.message});
+    yield put({type: READ_DIR_FAILED, message: e.message});
   }
 }
 
