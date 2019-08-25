@@ -118,9 +118,6 @@ app.on('ready', async () => {
     console.log("worker received the task: "+arg)
   })
 
-  mainWindow.on('closed', () => {
-    mainWindow = null;
-  });
 
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();

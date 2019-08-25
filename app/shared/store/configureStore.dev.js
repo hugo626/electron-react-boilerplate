@@ -1,26 +1,21 @@
-import { createStore, applyMiddleware, compose } from 'redux';
+import {applyMiddleware, compose, createStore} from 'redux';
 import thunk from 'redux-thunk';
-import { createHashHistory } from 'history';
-import { routerMiddleware, routerActions } from 'connected-react-router';
-import { createLogger } from 'redux-logger';
+import {electronEnhancer} from 'redux-electron-store';
+import {routerActions, routerMiddleware} from 'connected-react-router';
 import createSagaMiddleware from 'redux-saga';
+import {createLogger} from "redux-logger";
 import createRootReducer from '../reducers';
 import * as counterActions from '../actions/counter';
-import type { counterStateType } from '../reducers/types';
-import rootSaga from '../saga/root';
+import rootSaga from '../sagas/root';
 
-const history = createHashHistory();
-
-const rootReducer = createRootReducer(history);
-
-const configureStore = (initialState?: counterStateType) => {
+const configureStore = (initialState, history) => {
   // Redux Configuration
-  const middleware = [];
+  let middleware = [];
   const enhancers = [];
+  let elecEnhancer = null;
 
   // create the saga middleware
   const sagaMiddleware = createSagaMiddleware();
-
   // Thunk Middleware
   middleware.push(thunk);
   middleware.push(sagaMiddleware);
@@ -36,9 +31,22 @@ const configureStore = (initialState?: counterStateType) => {
     middleware.push(logger);
   }
 
-  // Router Middleware
-  const router = routerMiddleware(history);
-  middleware.push(router);
+  const rootReducer = createRootReducer(history);
+  if (history !== null) {
+    // Router Middleware
+    const router = routerMiddleware(history);
+    middleware = [
+      router,
+      ...middleware
+    ];
+    elecEnhancer = electronEnhancer(true)
+  }
+  if (history === null) {
+    middleware = [
+      ...middleware,
+    ];
+    elecEnhancer = electronEnhancer()
+  }
 
   // Redux DevTools Configuration
   const actionCreators = {
@@ -56,7 +64,7 @@ const configureStore = (initialState?: counterStateType) => {
   /* eslint-enable no-underscore-dangle */
 
   // Apply Middleware & Compose Enhancers
-  enhancers.push(applyMiddleware(...middleware));
+  enhancers.push(applyMiddleware(...middleware), elecEnhancer);
   const enhancer = composeEnhancers(...enhancers);
 
   // Create Store
@@ -69,10 +77,9 @@ const configureStore = (initialState?: counterStateType) => {
       () => store.replaceReducer(require('../reducers').default)
     );
   }
-
   sagaMiddleware.run(rootSaga);
 
   return store;
 };
 
-export default { configureStore, history };
+export default configureStore ;

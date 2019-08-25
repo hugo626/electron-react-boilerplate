@@ -1,6 +1,6 @@
 // @flow
-import { call, put, takeLatest } from 'redux-saga/effects'
-import { READ_DIR_REQUEST,  READ_DIR_FAILED, readDirIpc} from "../actions/home";
+import {call, put, takeLatest} from 'redux-saga/effects'
+import {READ_DIR_FAILED, READ_DIR_REQUEST, readDirIpc} from "../actions/home";
 
 // worker Saga: will be fired on USER_FETCH_REQUESTED actions
 function* readDir(action) {
