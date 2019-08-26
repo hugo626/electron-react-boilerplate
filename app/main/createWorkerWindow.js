@@ -27,6 +27,19 @@ export default function createWindow() {
 
   workerWindow.loadURL(`file://${mainHtml}`);
 
+  workerWindow.webContents.on('ready-to-show', () => {
+    if (!workerWindow) {
+      throw new Error('"mainWindow" is not defined');
+    }
+    console.log("Show window!!");
+    showWindow();
+    if (process.env.START_MINIMIZED) {
+      workerWindow.minimize();
+    } else {
+      showWindow();
+    }
+  });
+
   workerWindow.on('closed', () => {
     workerWindow = null;
   });

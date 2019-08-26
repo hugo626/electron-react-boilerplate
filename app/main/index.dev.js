@@ -38,8 +38,7 @@ const installExtensions = async () => {
   ).catch(console.log);
 };
 
-async function start() {
-
+app.on('ready', async () => {
   if (
     process.env.NODE_ENV === 'development' ||
     process.env.DEBUG_PROD === 'true'
@@ -49,7 +48,7 @@ async function start() {
 
   const store = configureStore(global.state, null );
 
-  let currentState
+  let currentState= {}
   store.subscribe(() =>{
     let oldState = currentState;
     currentState = store.getState()
@@ -66,13 +65,5 @@ async function start() {
   // init
   createMainWindow();
   // createWorkerWindow();
-}
-
-
-app.on('ready', ()=>{
-  start()
-    .catch((err) => {
-      dialog.showErrorBox('There\'s been an error', err);
-    });
 });
 
