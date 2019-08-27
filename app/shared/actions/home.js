@@ -1,6 +1,6 @@
 // @flow
 import { ipcRenderer } from "electron";
-import {REQUEST_READ_DIR} from "../constants/ipcMessageName";
+import {REQUEST_READ_DIR} from "../../renderer/shared/constants/ipcMessageName";
 
 const READ_DIR_REQUEST = 'READ_DIR_REQUEST';
 const READ_DIR_SUCCEEDED = 'READ_DIR_SUCCEEDED';

@@ -2,9 +2,9 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
-import type { Store } from '../reducers/types';
+import type { Store } from '../../../shared/reducers/types';
 import Routes from '../Routes';
-import { todosFetchRequested } from "../db/actions";
+import { todosFetchRequested } from "../../../shared/actions/db";
 
 type Props = {
   store: Store,

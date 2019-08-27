@@ -1,6 +1,6 @@
 import { ipcRenderer } from "electron";
 import {put } from 'redux-saga/effects';
-import {REQUEST_READ_DIR, RECEIVED_READ_DIR} from "../constants/ipcMessageName";
+import {REQUEST_READ_DIR, RECEIVED_READ_DIR} from "../shared/constants/ipcMessageName";
 console.log("This is worker, give me task")
 ipcRenderer.on(REQUEST_READ_DIR, (event,message)=>{
   console.log(`This is worker, Received a task: ${REQUEST_READ_DIR}`);

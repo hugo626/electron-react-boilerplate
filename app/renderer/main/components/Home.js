@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from 'antd';
-import routes from '../constants/routes';
+import routes from '../../shared/constants/routes';
 import styles from './Home.css';
 
 const path = require("path");

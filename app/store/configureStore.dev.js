@@ -4,10 +4,10 @@ import { createHashHistory } from 'history';
 import { routerMiddleware, routerActions } from 'connected-react-router';
 import { createLogger } from 'redux-logger';
 import createSagaMiddleware from 'redux-saga';
-import createRootReducer from '../reducers';
-import * as counterActions from '../actions/counter';
-import type { counterStateType } from '../reducers/types';
-import rootSaga from '../saga/root';
+import createRootReducer from '../shared/reducers';
+import * as counterActions from '../shared/actions/counter';
+import type { counterStateType } from '../shared/reducers/types';
+import rootSaga from '../shared/saga/root';
 
 const history = createHashHistory();
 
@@ -64,9 +64,9 @@ const configureStore = (initialState?: counterStateType) => {
 
   if (module.hot) {
     module.hot.accept(
-      '../reducers',
+      '../shared/reducers',
       // eslint-disable-next-line global-require
-      () => store.replaceReducer(require('../reducers').default)
+      () => store.replaceReducer(require('../shared/reducers').default)
     );
   }
 

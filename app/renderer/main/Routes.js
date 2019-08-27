@@ -4,7 +4,7 @@ import { Switch, Route } from 'react-router';
 import PropTypes from 'prop-types';
 import { Layout, Menu, Icon } from 'antd';
 
-import routes from './constants/routes';
+import routes from '../shared/constants/routes';
 import HomePage from './containers/HomePage';
 import CounterPage from './containers/CounterPage';
 

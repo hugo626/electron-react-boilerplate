@@ -1,7 +1,6 @@
-const isDev = require('electron-is-dev');
 const config = require('./config');
 
-const env = isDev ? 'development' : 'production';
+const env = process.env.NODE_ENV === 'production' ? 'production' : 'development' ;
 /* eslint-disable */
 const knex = require('knex')(config[env]);
 

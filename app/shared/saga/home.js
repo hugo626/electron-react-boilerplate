@@ -2,7 +2,7 @@
 import { ipcRenderer } from "electron";
 import { call, put, takeLatest } from 'redux-saga/effects'
 import { READ_DIR_REQUEST, READ_DIR_SUCCEEDED, READ_DIR_FAILED, readDirIpc} from "../actions/home";
-import { REPLY_READ_DIR } from "../constants/ipcMessageName";
+import { REPLY_READ_DIR } from "../../renderer/shared/constants/ipcMessageName";
 
 // worker Saga: will be fired on USER_FETCH_REQUESTED actions
 function* readDir(action) {
