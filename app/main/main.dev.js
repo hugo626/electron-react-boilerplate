@@ -10,12 +10,12 @@
  *
  * @flow
  */
-import { app, BrowserWindow, ipcMain } from 'electron';
-import { autoUpdater } from 'electron-updater';
+import {app, ipcMain} from 'electron';
+import {autoUpdater} from 'electron-updater';
 import log from 'electron-log';
-import MenuBuilder from './menu';
-import path from 'path';
-import {REQUEST_READ_DIR,RECEIVED_READ_DIR} from "../renderer/shared/constants/ipcMessageName";
+import {RECEIVED_READ_DIR, REQUEST_READ_DIR} from "../renderer/shared/constants/ipcMessageName";
+import createMainWindow from "./createMainWindow";
+import createWorkerWindow from "./createWorkerWindow";
 
 export default class AppUpdater {
   constructor() {
@@ -69,62 +69,24 @@ app.on('ready', async () => {
     await installExtensions();
   }
 
-  mainWindow = new BrowserWindow({
-    show: false,
-    width: 1024,
-    height: 728
-  });
+  mainWindow = createMainWindow();
+  workerWindow = createWorkerWindow();
 
-  workerWindow = new BrowserWindow({
-    show: false,
-    width: 1024,
-    height: 728
-  });
-
-  const mainHtml = path.join(__dirname, '../renderer/assets/html/index.html');
-  const workerHtml = path.join(__dirname, '../renderer/assets/html/worker.html');
-  mainWindow.loadURL(`file://${mainHtml}`);
-  workerWindow.loadURL(`file://${workerHtml}`);
-  // @TODO: Use 'ready-to-show' event
-  //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
-  mainWindow.webContents.on('did-finish-load', () => {
-    if (!mainWindow) {
-      throw new Error('"mainWindow" is not defined');
-    }
-    if (process.env.START_MINIMIZED) {
-      mainWindow.minimize();
-    } else {
-      mainWindow.show();
-      mainWindow.focus();
-    }
-  });
-
-  mainWindow.on('closed', () => {
-    mainWindow = null;
-    workerWindow.close();
-  });
-
-  ipcMain.on(REQUEST_READ_DIR,(event,arg) => {
-    workerWindow.webContents.send(REQUEST_READ_DIR,arg);
+  ipcMain.on(REQUEST_READ_DIR, (event, arg) => {
+    workerWindow.webContents.send(REQUEST_READ_DIR, arg);
     // readFilesAsync(arg).then( files=>{
     //   event.returnValue = files
     // });
   })
 
-  ipcMain.on(RECEIVED_READ_DIR, (event,arg)=>{
+  ipcMain.on(RECEIVED_READ_DIR, (event, arg) => {
     console.log(`received Worker's result ${event} ${arg}`)
   })
 
-  workerWindow.webContents.on(REQUEST_READ_DIR,(event,arg) => {
-    console.log("worker received the task: "+arg)
+  workerWindow.webContents.on(REQUEST_READ_DIR, (event, arg) => {
+    console.log("worker received the task: " + arg)
   })
 
-  mainWindow.on('closed', () => {
-    mainWindow = null;
-  });
-
-  const menuBuilder = new MenuBuilder(mainWindow);
-  menuBuilder.buildMenu();
 
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
