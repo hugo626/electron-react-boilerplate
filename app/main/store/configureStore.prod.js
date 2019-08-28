@@ -4,9 +4,9 @@ import thunk from 'redux-thunk';
 import createSagaMiddleware from 'redux-saga';
 import { createHashHistory } from 'history';
 import { routerMiddleware } from 'connected-react-router';
-import createRootReducer from '../shared/reducers';
-import type { counterStateType } from '../shared/reducers/types';
-import rootSaga from '../shared/saga/root';
+import createRootReducer from '../../shared/reducers';
+import type { counterStateType } from '../../shared/reducers/types';
+import rootSaga from '../../shared/saga/root';
 
 // create the saga middleware
 const sagaMiddleware = createSagaMiddleware()

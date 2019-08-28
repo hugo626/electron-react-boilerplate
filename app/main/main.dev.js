@@ -14,7 +14,8 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
-import {REQUEST_READ_DIR,RECEIVED_READ_DIR} from "./renderer/shared/constants/ipcMessageName";
+import path from 'path';
+import {REQUEST_READ_DIR,RECEIVED_READ_DIR} from "../renderer/shared/constants/ipcMessageName";
 
 export default class AppUpdater {
   constructor() {
@@ -80,9 +81,10 @@ app.on('ready', async () => {
     height: 728
   });
 
-
-  mainWindow.loadURL(`file://${__dirname}/renderer/assets/html/index.html`);
-  workerWindow.loadURL(`file://${__dirname}/renderer/assets/html/worker.html`);
+  const mainHtml = path.join(__dirname, '../renderer/assets/html/index.html');
+  const workerHtml = path.join(__dirname, '../renderer/assets/html/worker.html');
+  mainWindow.loadURL(`file://${mainHtml}`);
+  workerWindow.loadURL(`file://${workerHtml}`);
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
   mainWindow.webContents.on('did-finish-load', () => {
