@@ -13,10 +13,14 @@
 import {app, ipcMain} from 'electron';
 import {autoUpdater} from 'electron-updater';
 import log from 'electron-log';
+import {createMemoryHistory} from "history";
 import {RECEIVED_READ_DIR, REQUEST_READ_DIR} from "../renderer/shared/constants/ipcMessageName";
 import createMainWindow from "./createMainWindow";
 import createWorkerWindow from "./createWorkerWindow";
+import configureStore from "./store/configureStore";
 
+const history = createMemoryHistory();
+const store = configureStore({env:'main'},history);
 export default class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
@@ -54,6 +58,8 @@ const installExtensions = async () => {
  */
 
 app.on('window-all-closed', () => {
+  mainWindow = null;
+  workerWindow = null;
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
   if (process.platform !== 'darwin') {
@@ -92,3 +98,7 @@ app.on('ready', async () => {
   // eslint-disable-next-line
   new AppUpdater();
 });
+
+store.subscribe(() =>{
+  console.log(store.getState())
+})

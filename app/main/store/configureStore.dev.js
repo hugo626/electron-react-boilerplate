@@ -1,23 +1,20 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
-import { createHashHistory } from 'history';
 import { routerMiddleware, routerActions } from 'connected-react-router';
 import { createLogger } from 'redux-logger';
 import createSagaMiddleware from 'redux-saga';
+import { electronEnhancer } from 'redux-electron-store';
 import createRootReducer from '../../shared/reducers';
 import * as counterActions from '../../shared/actions/counter';
 import type { counterStateType } from '../../shared/reducers/types';
 import rootSaga from '../../shared/saga/root';
 
-const history = createHashHistory();
 
-const rootReducer = createRootReducer(history);
-
-const configureStore = (initialState?: counterStateType) => {
+const configureStore = (initialState?: counterStateType, history, isRenderStore = false) => {
   // Redux Configuration
   const middleware = [];
   const enhancers = [];
-
+  const rootReducer = createRootReducer(history);
   // create the saga middleware
   const sagaMiddleware = createSagaMiddleware();
 
@@ -47,7 +44,7 @@ const configureStore = (initialState?: counterStateType) => {
   };
   // If Redux DevTools Extension is installed use it, otherwise use Redux compose
   /* eslint-disable no-underscore-dangle */
-  const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+  const composeEnhancers = (isRenderStore && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__)
     ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
         // Options: http://extension.remotedev.io/docs/API/Arguments.html
         actionCreators
@@ -56,7 +53,10 @@ const configureStore = (initialState?: counterStateType) => {
   /* eslint-enable no-underscore-dangle */
 
   // Apply Middleware & Compose Enhancers
-  enhancers.push(applyMiddleware(...middleware));
+  enhancers.push(applyMiddleware(...middleware),electronEnhancer({
+    // Necessary for synched actions to pass through all enhancers
+    dispatchProxy: a => store.dispatch(a),
+  }));
   const enhancer = composeEnhancers(...enhancers);
 
   // Create Store
@@ -75,4 +75,4 @@ const configureStore = (initialState?: counterStateType) => {
   return store;
 };
 
-export default { configureStore, history };
+export default configureStore;
