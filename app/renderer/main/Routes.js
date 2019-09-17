@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
-import { NavLink  } from 'react-router-dom';
-import { Switch, Route } from 'react-router';
-import PropTypes from 'prop-types';
-import { Layout, Menu, Icon } from 'antd';
+import React, {Component} from 'react';
+import {NavLink} from 'react-router-dom';
+import {Route, Switch} from 'react-router';
+import {Icon, Layout, Menu} from 'antd';
 
 import routes from '../shared/constants/routes';
 import HomePage from './containers/HomePage';

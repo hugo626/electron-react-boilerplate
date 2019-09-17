@@ -1,13 +1,16 @@
 import React from 'react';
-import { render } from 'react-dom';
-import { AppContainer } from 'react-hot-loader';
-import { createHashHistory } from 'history';
+import {render} from 'react-dom';
+import {AppContainer} from 'react-hot-loader';
+import {createHashHistory} from 'history';
 import Root from './containers/Root';
 import configureStore from '../../main/store/configureStore';
 import '../assets/css/app.global.css';
+import {mainRootSaga} from "../../shared/saga/root";
 
 const history = createHashHistory();
-const store = configureStore({},history,true);
+const {store, sagaMiddleware}= configureStore({},history,true);
+sagaMiddleware.run(mainRootSaga);
+
 render(
   <AppContainer>
     <Root store={store} history={history} />

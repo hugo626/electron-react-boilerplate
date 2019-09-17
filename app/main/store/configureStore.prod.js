@@ -6,13 +6,11 @@ import { routerMiddleware } from 'connected-react-router';
 import { electronEnhancer } from 'redux-electron-store';
 import createRootReducer from '../../shared/reducers';
 import type { counterStateType } from '../../shared/reducers/types';
-import rootSaga from '../../shared/saga/root';
 
 // create the saga middleware
-const sagaMiddleware = createSagaMiddleware()
-
 function configureStore(initialState?: counterStateType, history, isRenderStore = false) {
-
+  // create the saga middleware
+  const sagaMiddleware = createSagaMiddleware();
   const rootReducer = createRootReducer(history);
   const router = routerMiddleware(history);
   const enhancer = compose(applyMiddleware(thunk, sagaMiddleware, router),electronEnhancer({
@@ -20,8 +18,7 @@ function configureStore(initialState?: counterStateType, history, isRenderStore 
     dispatchProxy: a => store.dispatch(a),
   }));
   const store = createStore(rootReducer, initialState, enhancer);
-  sagaMiddleware.run(rootSaga);
-  return store;
+  return {store, sagaMiddleware};
 }
 
 export default configureStore;

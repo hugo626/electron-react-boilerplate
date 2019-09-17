@@ -171,6 +171,14 @@ Then, use git to merge some latest commits:
 git pull upstream master
 ```
 
+## install sqlit 3
+
+```sh
+npm install sqlite3 --save
+npm install electron-rebuild --save
+.\node_modules\.bin\electron-rebuild.cmd
+```
+
 ## Maintainers
 
 - [Vikram Rangaraj](https://github.com/vikr01)

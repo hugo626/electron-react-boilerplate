@@ -8,10 +8,10 @@ function showWindow() {
   workerWindow.focus();
 }
 
-export default function createMainWindow() {
+export default function createWorkerWindow() {
   if (workerWindow !== null) {
     if (workerWindow.isLoaded()) {
-      showWindow();
+      // showWindow();
     }
     return workerWindow;
   }
@@ -30,7 +30,7 @@ export default function createMainWindow() {
     if (process.env.START_MINIMIZED) {
       workerWindow.minimize();
     } else {
-      showWindow();
+      // showWindow();
     }
   });
 
@@ -38,6 +38,7 @@ export default function createMainWindow() {
     workerWindow = null;
   });
 
+  workerWindow.openDevTools();
   if (process.env.NODE_ENV === 'development') {
     workerWindow.openDevTools();
   }

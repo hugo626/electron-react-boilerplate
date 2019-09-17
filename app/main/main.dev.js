@@ -18,9 +18,12 @@ import {RECEIVED_READ_DIR, REQUEST_READ_DIR} from "../renderer/shared/constants/
 import createMainWindow from "./createMainWindow";
 import createWorkerWindow from "./createWorkerWindow";
 import configureStore from "./store/configureStore";
+import {mainRootSaga} from "../shared/saga/root";
 
 const history = createMemoryHistory();
-const store = configureStore({env:'main'},history);
+const {store, sagaMiddleware }= configureStore({database:'main'},history);
+sagaMiddleware.run(mainRootSaga);
+
 export default class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';

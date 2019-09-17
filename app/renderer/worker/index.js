@@ -1,20 +1,18 @@
 import { ipcRenderer } from "electron";
-import {put } from 'redux-saga/effects';
-import {REQUEST_READ_DIR, RECEIVED_READ_DIR} from "../shared/constants/ipcMessageName";
-console.log("This is worker, give me task")
+import {createHashHistory} from "history";
+
+import {REQUEST_READ_DIR} from "../shared/constants/ipcMessageName";
+import configureStore from "../../main/store/configureStore";
+import {todosFetchRequested} from "../../shared/actions/db";
+import {workerRootSaga} from "../../shared/saga/root";
+import {readDirectory} from "../../shared/actions/worker";
+
+const history = createHashHistory();
+const {store, sagaMiddleware }= configureStore({},history,true);
+sagaMiddleware.run(workerRootSaga);
+
+store.dispatch(todosFetchRequested());
+
 ipcRenderer.on(REQUEST_READ_DIR, (event,message)=>{
-  console.log(`This is worker, Received a task: ${REQUEST_READ_DIR}`);
-  console.log(event);
-  console.log(message);
-  myLoop ();
+  store.dispatch(readDirectory(message));
 })
-let i =0;
-function myLoop () {           //  create a loop function
-  setTimeout(function () {    //  call a 3s setTimeout when the loop is called
-    ipcRenderer.send(RECEIVED_READ_DIR, i);
-     i++;                     //  increment the counter
-     if (i < 10) {            //  if the counter < 10, call the loop function
-        myLoop();             //  ..  again which will trigger another
-     }                        //  ..  setTimeout()
-  }, 3000)
-}

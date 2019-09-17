@@ -4,11 +4,10 @@ import { routerMiddleware, routerActions } from 'connected-react-router';
 import { createLogger } from 'redux-logger';
 import createSagaMiddleware from 'redux-saga';
 import { electronEnhancer } from 'redux-electron-store';
+import { ipcRenderer, ipcMain } from "electron";
 import createRootReducer from '../../shared/reducers';
 import * as counterActions from '../../shared/actions/counter';
 import type { counterStateType } from '../../shared/reducers/types';
-import rootSaga from '../../shared/saga/root';
-
 
 const configureStore = (initialState?: counterStateType, history, isRenderStore = false) => {
   // Redux Configuration
@@ -61,18 +60,24 @@ const configureStore = (initialState?: counterStateType, history, isRenderStore 
 
   // Create Store
   const store = createStore(rootReducer, initialState, enhancer);
-
-  if (module.hot) {
+  if (module.hot && isRenderStore) {
     module.hot.accept(
       '../../shared/reducers',
       // eslint-disable-next-line global-require
-      () => store.replaceReducer(require('../../shared/reducers').default)
-    );
+      () => {
+        ipcRenderer.sendSync('renderer-reload');
+        store.replaceReducer(require('../../shared/reducers').default)
+      });
+  } else {
+    // In the main process
+    ipcMain.on('renderer-reload', (event, action) => {
+      delete require.cache[require.resolve('../../shared/reducers')];
+      store.replaceReducer(require('../../shared/reducers'));
+      event.returnValue = true;
+    });
   }
 
-  sagaMiddleware.run(rootSaga);
-
-  return store;
+  return {store, sagaMiddleware};
 };
 
 export default configureStore;
